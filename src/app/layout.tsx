@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import '../tailwind.css';
-
+import '../globals.css';
 import { siteConfig } from '@/config/site';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -40,16 +39,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <style dangerouslySetInnerHTML={{ __html: `
-          :root { --app-primary: #050505; --app-primary-hover: #27272a; --color-dark-bg: #000000; }
-          .dark { --app-primary: #ffffff; --app-primary-hover: #e4e4e7; }
-          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-          body { background-color: #fff; color: #111827; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-          a { color: inherit; text-decoration: none; }
-          .text-glow { text-shadow: 0 0 20px rgba(124,58,237,0.5); }
-          .bg-glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-          .bg-glass-dark { background: rgba(15,23,42,0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        `}} />
         <meta name="theme-color" content="#ffffff" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
