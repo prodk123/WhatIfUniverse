@@ -1,6 +1,5 @@
 import React from 'react';
 import { SummaryItem } from '@/types/engine';
-import { Card } from '@/components/ui/Card';
 
 export function ResultsPanel({ summary }: { summary: Record<string, SummaryItem> }) {
   const items = Object.values(summary);

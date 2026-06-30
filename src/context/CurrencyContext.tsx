@@ -25,15 +25,19 @@ export const currencies: Currency[] = [
 type CurrencyContextType = {
   currency: Currency;
   setCurrency: (currency: Currency) => void;
+  isLocked: boolean;
+  setLocked: (locked: boolean) => void;
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>(currencies[0]);
+  const [isLocked, setLocked] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const saved = localStorage.getItem('whatif-currency');
     if (saved) {
@@ -49,11 +53,11 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   // Prevent hydration mismatch by rendering default until mounted
   if (!mounted) {
-    return <CurrencyContext.Provider value={{ currency: currencies[0], setCurrency }}>{children}</CurrencyContext.Provider>;
+    return <CurrencyContext.Provider value={{ currency: currencies[0], setCurrency, isLocked, setLocked }}>{children}</CurrencyContext.Provider>;
   }
 
   return (
-    <CurrencyContext.Provider value={{ currency, setCurrency }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency, isLocked, setLocked }}>
       {children}
     </CurrencyContext.Provider>
   );

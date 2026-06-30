@@ -24,11 +24,11 @@ export function InputForm({ fields, values, onChange, currency }: InputFormProps
             <div key={field.name} className="py-2">
               <Slider
                 label={field.label}
-                value={val}
+                value={Number(val)}
                 min={field.min ?? 0}
                 max={field.max ?? 100}
                 step={field.step ?? 1}
-                prefixStr={field.prefix === '₹' ? currency.symbol : field.prefix}
+                prefixStr={(field.prefix === '₹' || field.prefix === '$' || field.prefix === 'AED') ? currency.symbol : field.prefix}
                 suffixStr={field.suffixStr}
                 onChangeValue={(v) => onChange(field.name, v)}
               />
@@ -57,7 +57,7 @@ export function InputForm({ fields, values, onChange, currency }: InputFormProps
             min={field.min}
             max={field.max}
             step={field.step}
-            prefixStr={field.prefix === '₹' ? currency.symbol : field.prefix}
+            prefixStr={(field.prefix === '₹' || field.prefix === '$' || field.prefix === 'AED') ? currency.symbol : field.prefix}
             suffixStr={field.unit}
             onChange={(e) => onChange(field.name, e.target.value)}
           />

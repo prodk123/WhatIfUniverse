@@ -8,32 +8,32 @@ import { EngineFunction } from '@/types/engine';
  * Config: frequencyMultiplier (how many times per year the amount is invested)
  */
 export const compoundGrowthEngine: EngineFunction = (inputs, config) => {
-  const curr = (config.currency as any) || { symbol: '₹', locale: 'en-IN' };
+  const curr = (config.currency as { symbol: string; locale: string }) || { symbol: '₹', locale: 'en-IN' };
   
   // Dynamic Amount Calculation
-  let amount = inputs.amount || 0;
+  let amount = Math.max(0, Number(inputs.amount) || 0);
   if (inputs.income !== undefined && inputs.savingsRate !== undefined) {
-    amount = inputs.income * (inputs.savingsRate / 100);
+    amount = Math.max(0, Number(inputs.income)) * (Math.max(0, Number(inputs.savingsRate)) / 100);
   } else if (inputs.dailyAmount !== undefined) {
-    amount = inputs.dailyAmount;
+    amount = Math.max(0, Number(inputs.dailyAmount));
   } else if (inputs.emiAmount !== undefined) {
-    amount = inputs.emiAmount;
+    amount = Math.max(0, Number(inputs.emiAmount));
   } else if (inputs.lumpSumAmount !== undefined) {
-    amount = inputs.lumpSumAmount;
+    amount = Math.max(0, Number(inputs.lumpSumAmount));
   } else if (inputs.monthlySip !== undefined) {
-    amount = inputs.monthlySip;
+    amount = Math.max(0, Number(inputs.monthlySip));
   }
 
   // Dynamic Years Calculation
-  let years = inputs.years || 10;
+  let years = Math.max(1, Number(inputs.years) || 10);
   if (inputs.currentAge !== undefined && inputs.retireAge !== undefined) {
-    years = Math.max(1, inputs.retireAge - inputs.currentAge);
+    years = Math.max(1, Number(inputs.retireAge) - Number(inputs.currentAge));
   } else if (inputs.childAge !== undefined && inputs.collegeAge !== undefined) {
-    years = Math.max(1, inputs.collegeAge - inputs.childAge);
+    years = Math.max(1, Number(inputs.collegeAge) - Number(inputs.childAge));
   }
 
-  const annualRate = (inputs.rate !== undefined ? inputs.rate : 12) / 100;
-  const frequencyMultiplier = (config.frequencyMultiplier as number) || 12;
+  const annualRate = (inputs.rate !== undefined ? Number(inputs.rate) : 12) / 100;
+  const frequencyMultiplier = Number(config.frequencyMultiplier) || 12;
 
   const monthlyRate = annualRate / 12;
   const totalMonths = years * 12;
@@ -110,7 +110,7 @@ function generateGrowthInsights(
   finalValue: number,
   years: number,
   rate: number,
-  curr: any
+  curr: { symbol: string; locale: string }
 ): string[] {
   const insights: string[] = [];
   const returns = finalValue - invested;
@@ -141,15 +141,7 @@ function generateGrowthInsights(
   return insights;
 }
 
-function formatIndian(num: number): string {
-  const str = num.toString();
-  const lastThree = str.slice(-3);
-  const otherNumbers = str.slice(0, -3);
-  if (otherNumbers !== '') {
-    return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
-  }
-  return lastThree;
-}
+
 
 function formatCompact(num: number): string {
   if (num >= 10000000) return `${(num / 10000000).toFixed(0)} Cr`;

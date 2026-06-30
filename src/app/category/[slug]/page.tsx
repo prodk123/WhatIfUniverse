@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { getCategoryBySlug } from '@/config/categories';
 import { getSimulatorsByCategory } from '@/config/simulators';
 import { Card } from '@/components/ui/Card';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { FAQSection } from '@/components/simulator/FAQSection';
 import { notFound } from 'next/navigation';
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -16,8 +19,27 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   const categorySimulators = getSimulatorsByCategory(resolvedParams.slug);
 
+  const faqSchema = category.faqs && category.faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: category.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
+  } : null;
+
   return (
     <div className="container mx-auto py-12 px-4 md:px-8 max-w-6xl">
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
@@ -52,6 +74,20 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <div className="bg-gray-50 dark:bg-slate-900 rounded-xl p-12 text-center border border-gray-200 dark:border-slate-800">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">Coming Soon</h3>
           <p className="text-gray-600 dark:text-gray-400">Simulators for this category are currently being built.</p>
+        </div>
+      )}
+
+      {category.seoContent && (
+        <div className="prose dark:prose-invert max-w-4xl mx-auto mt-16 bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-slate-800">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {category.seoContent}
+          </ReactMarkdown>
+        </div>
+      )}
+
+      {category.faqs && category.faqs.length > 0 && (
+        <div className="mt-8">
+          <FAQSection faqs={category.faqs} />
         </div>
       )}
     </div>

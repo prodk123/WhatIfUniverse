@@ -39,6 +39,7 @@ export function Slider({
         value={value}
         onChange={(e) => onChangeValue && onChangeValue(parseFloat(e.target.value))}
         className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary"
+        aria-label={label}
         {...props}
       />
       <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 px-1">

@@ -8,56 +8,62 @@ import { EngineFunction } from '@/types/engine';
  * Config: costOfLivingMultiplier, taxRateCurrent, taxRateNew
  */
 export const salaryComparisonEngine: EngineFunction = (inputs, config) => {
-  const curr = (config.currency as any) || { symbol: '₹', locale: 'en-IN' };
-  let currentSalary = inputs.currentSalary || 0;
-  let newSalary = inputs.newSalary !== undefined ? inputs.newSalary : 0;
-  let currentExpenses = inputs.currentExpenses || 0;
-  let newExpenses = inputs.newExpenses !== undefined ? inputs.newExpenses : currentExpenses;
+  const curr = (config.currency as { symbol: string; locale: string }) || { symbol: '₹', locale: 'en-IN' };
+  const currentSalary = Math.max(0, Number(inputs.currentSalary) || 0);
+  let newSalary = inputs.newSalary !== undefined ? Math.max(0, Number(inputs.newSalary)) : 0;
+  const currentExpenses = Math.max(0, Number(inputs.currentExpenses) || 0);
+  const newExpenses = inputs.newExpenses !== undefined ? Math.max(0, Number(inputs.newExpenses)) : currentExpenses;
   
   if (inputs.raisePercent !== undefined) {
-    newSalary = currentSalary * (1 + inputs.raisePercent / 100);
+    newSalary = currentSalary * (1 + Math.max(0, Number(inputs.raisePercent)) / 100);
   }
   
-  const bootcampCost = inputs.bootcampCost || 0;
+  const bootcampCost = Math.max(0, Number(inputs.bootcampCost) || 0);
 
-  const years = inputs.years || 5;
-  const annualRaise = (inputs.annualRaise || 5) / 100;
+  const years = Math.max(1, Number(inputs.years) || 5);
+  const annualRaise = Math.max(0, Number(inputs.annualRaise) || 5) / 100;
 
-  const taxRateCurrent = ((config.taxRateCurrent as number) || 30) / 100;
-  const taxRateNew = ((config.taxRateNew as number) || 0) / 100;
+  const taxRateCurrent = inputs.taxRateCurrent !== undefined ? Math.min(100, Math.max(0, Number(inputs.taxRateCurrent))) / 100 : Math.min(100, Math.max(0, Number(config.taxRateCurrent) || 30)) / 100;
+  const taxRateNew = inputs.taxRateNew !== undefined ? Math.min(100, Math.max(0, Number(inputs.taxRateNew))) / 100 : Math.min(100, Math.max(0, Number(config.taxRateNew) || 0)) / 100;
 
   const chartData = [];
   let currentTotalSavings = 0;
   let newTotalSavings = -bootcampCost; // Deduct bootcamp cost upfront if any
-  let currentYearlySalary = currentSalary * 12;
-  let newYearlySalary = newSalary * 12;
+  let currentMonthlySalary = currentSalary;
+  let newMonthlySalary = newSalary;
   const milestones = [];
-  let breakEvenYear = -1;
+  let breakEvenMonth = -1;
 
-  for (let year = 0; year <= years; year++) {
-    if (year > 0) {
-      const currentAfterTax = currentYearlySalary * (1 - taxRateCurrent);
-      const newAfterTax = newYearlySalary * (1 - taxRateNew);
-      const currentSaved = currentAfterTax - currentExpenses * 12;
-      const newSaved = newAfterTax - newExpenses * 12;
+  chartData.push({
+    year: 0,
+    currentSavings: 0,
+    newSavings: Math.round(newTotalSavings),
+  });
 
-      currentTotalSavings += Math.max(0, currentSaved);
-      newTotalSavings += Math.max(0, newSaved);
+  for (let month = 1; month <= years * 12; month++) {
+    const currentAfterTax = currentMonthlySalary * (1 - taxRateCurrent);
+    const newAfterTax = newMonthlySalary * (1 - taxRateNew);
+    const currentSaved = currentAfterTax - currentExpenses;
+    const newSaved = newAfterTax - newExpenses;
 
-      currentYearlySalary *= 1 + annualRaise;
-      newYearlySalary *= 1 + annualRaise;
+    currentTotalSavings += Math.max(0, currentSaved);
+    newTotalSavings += Math.max(0, newSaved);
+
+    if (month % 12 === 0) {
+      chartData.push({
+        year: month / 12,
+        currentSavings: Math.round(currentTotalSavings),
+        newSavings: Math.round(newTotalSavings),
+      });
+      // Apply annual raise at the end of the year
+      currentMonthlySalary *= 1 + annualRaise;
+      newMonthlySalary *= 1 + annualRaise;
     }
 
-    chartData.push({
-      year,
-      currentSavings: Math.round(currentTotalSavings),
-      newSavings: Math.round(newTotalSavings),
-    });
-
-    if (breakEvenYear === -1 && newTotalSavings > currentTotalSavings && year > 0) {
-      breakEvenYear = year;
+    if (breakEvenMonth === -1 && newTotalSavings > currentTotalSavings) {
+      breakEvenMonth = month;
       milestones.push({
-        year,
+        year: month / 12,
         label: 'New option overtakes current savings',
         value: Math.round(newTotalSavings),
       });
@@ -65,9 +71,19 @@ export const salaryComparisonEngine: EngineFunction = (inputs, config) => {
   }
 
   const savingsDifference = newTotalSavings - currentTotalSavings;
-  const monthlyCurrentNet =
-    (currentSalary * (1 - taxRateCurrent) - currentExpenses);
+  const monthlyCurrentNet = (currentSalary * (1 - taxRateCurrent) - currentExpenses);
   const monthlyNewNet = (newSalary * (1 - taxRateNew) - newExpenses);
+
+  let breakEvenText = 'N/A';
+  if (breakEvenMonth > 0) {
+    if (breakEvenMonth < 12) {
+      breakEvenText = `${breakEvenMonth} months`;
+    } else {
+      const bYears = Math.floor(breakEvenMonth / 12);
+      const bMonths = breakEvenMonth % 12;
+      breakEvenText = `${bYears} year${bYears > 1 ? 's' : ''}${bMonths > 0 ? ` ${bMonths} month${bMonths > 1 ? 's' : ''}` : ''}`;
+    }
+  }
 
   return {
     summary: {
@@ -81,13 +97,13 @@ export const salaryComparisonEngine: EngineFunction = (inputs, config) => {
         highlight: monthlyNewNet > monthlyCurrentNet,
       },
       difference: {
-        label: 'Monthly Savings Diff',
+        label: `Total Savings Diff (${years}y)`,
         value: `${savingsDifference >= 0 ? '+' : ''}${curr.symbol}${Math.abs(Math.round(savingsDifference)).toLocaleString(curr.locale)}`,
         highlight: true,
       },
       breakEven: {
         label: 'Break-Even Point',
-        value: breakEvenYear > 0 ? `Year ${breakEvenYear}` : 'N/A',
+        value: breakEvenText,
       },
     },
     chartData,
@@ -97,7 +113,7 @@ export const salaryComparisonEngine: EngineFunction = (inputs, config) => {
       monthlyNewNet,
       savingsDifference,
       years,
-      breakEvenYear,
+      breakEvenMonth,
       curr
     ),
   };
@@ -108,8 +124,8 @@ function generateComparisonInsights(
   newNet: number,
   totalDiff: number,
   years: number,
-  breakEvenYear: number,
-  curr: any
+  breakEvenMonth: number,
+  curr: { symbol: string; locale: string }
 ): string[] {
   const insights: string[] = [];
 
@@ -123,10 +139,13 @@ function generateComparisonInsights(
     );
   }
 
-  if (breakEvenYear > 0) {
-    insights.push(
-      `The new option breaks even after ${breakEvenYear} year${breakEvenYear > 1 ? 's' : ''}. After that, you accumulate wealth faster.`
-    );
+  if (breakEvenMonth > 0) {
+    if (breakEvenMonth < 12) {
+      insights.push(`The new option breaks even in just ${breakEvenMonth} months. After that, you accumulate wealth faster.`);
+    } else {
+      const bYears = Math.floor(breakEvenMonth / 12);
+      insights.push(`The new option breaks even after ${bYears} year${bYears > 1 ? 's' : ''}. After that, you accumulate wealth faster.`);
+    }
   }
 
   if (totalDiff > 0) {
@@ -142,14 +161,3 @@ function generateComparisonInsights(
   return insights;
 }
 
-function formatNum(num: number): string {
-  const absNum = Math.abs(num);
-  const str = absNum.toString();
-  const lastThree = str.slice(-3);
-  const otherNumbers = str.slice(0, -3);
-  const formatted =
-    otherNumbers !== ''
-      ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
-      : lastThree;
-  return num < 0 ? `-${formatted}` : formatted;
-}

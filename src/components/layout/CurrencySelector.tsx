@@ -6,7 +6,7 @@ import { useCurrency, currencies } from '@/context/CurrencyContext';
 
 export function CurrencySelector() {
   const pathname = usePathname();
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, isLocked } = useCurrency();
 
   if (pathname === '/') return null;
 
@@ -18,7 +18,8 @@ export function CurrencySelector() {
           const found = currencies.find(c => c.code === e.target.value);
           if (found) setCurrency(found);
         }}
-        className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 transition-colors"
+        disabled={isLocked}
+        className={`bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 transition-colors ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {currencies.map((c) => (
           <option key={c.code} value={c.code}>

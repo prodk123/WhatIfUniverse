@@ -1,82 +1,55 @@
 import { EngineFunction } from '@/types/engine';
 
 export const healthProjectionEngine: EngineFunction = (inputs, config) => {
-  const curr = (config.currency as any) || { symbol: '₹', locale: 'en-IN' };
-  const daysPerWeek = inputs.daysPerWeek || 7;
-  const intensity = inputs.intensity || 1;
+  const curr = (config.currency as { symbol: string; locale: string }) || { symbol: '₹', locale: 'en-IN' };
+  const daysPerWeek = Math.max(1, Math.min(7, Number(inputs.daysPerWeek) || 7));
+  const intensity = Math.max(0.1, Number(inputs.intensity) || 1);
 
   const scenarioType = (config.scenarioType as string) || 'exercise';
   
   // Base configuration metrics
-  const healthScoreBase = (config.healthScoreImprovement as number) || 15;
-  const moneySavedPerDay = inputs.habitCost !== undefined ? inputs.habitCost : ((config.moneySavedPerDay as number) || 0);
+  const moneySavedPerDay = inputs.habitCost !== undefined ? Math.max(0, Number(inputs.habitCost)) : Math.max(0, Number(config.moneySavedPerDay) || 0);
+  const healthScoreBase = Number(config.healthScoreImprovement) || 15;
   
   // Specific scenario metrics
-  const unitPerDay = (config.unitPerDay as number) || 0; // e.g., 20 cigarettes, 3 liters, 8 hours
-  const unitLabel = (config.unitLabel as string) || 'Units';
-  const unitPlural = (config.unitPlural as string) || 'Units';
+  const unitPerDay = inputs.dailyAmount !== undefined ? Math.max(0, Number(inputs.dailyAmount)) : Math.max(0, Number(config.unitPerDay) || 0);
+  const unitLabel = String(config.unitLabel) || 'Units';
+  const unitPlural = String(config.unitPlural) || 'Units';
   
   // For exercise
-  const caloriesPerUnit = (config.caloriesPerUnit as number) || 0;
-  const weightLossPerWeek = (config.weightLossPerWeek as number) || 0;
+  const caloriesPerUnit = Math.max(0, Number(config.caloriesPerUnit) || 0);
+  const weightLossPerWeek = Math.max(0, Number(config.weightLossPerWeek) || 0);
 
   const isMonthly = inputs.months !== undefined;
-  const periods = isMonthly ? inputs.months : (inputs.years || 5);
+  const periods = isMonthly ? Math.max(1, Number(inputs.months)) : Math.max(1, Number(inputs.years) || 5);
 
   const chartData = [];
   const milestones = [];
-
-  const totalWeeks = isMonthly ? (periods * 4.33) : (periods * 52);
   
   let cumulativeCalories = 0;
   let cumulativeUnits = 0;
   let weightLost = 0;
   let moneySaved = 0;
-  let healthScore = 50;
 
   for (let p = 0; p <= periods; p++) {
     const weeksThisPeriod = p === 0 ? 0 : (isMonthly ? 4.33 : 52);
     const daysThisPeriod = weeksThisPeriod * daysPerWeek;
     
     cumulativeUnits += unitPerDay * daysThisPeriod * intensity;
-    cumulativeCalories += caloriesPerUnit * intensity * daysThisPeriod;
+    cumulativeCalories += (caloriesPerUnit * unitPerDay) * intensity * daysThisPeriod;
     moneySaved += moneySavedPerDay * daysThisPeriod;
 
-    // Weight loss plateau logic
+    // Weight loss plateau logic for explicit diet weight loss
     let weightLostThisPeriod = 0;
-    if (weeksThisPeriod > 0) {
-      if (scenarioType === 'diet') {
-        // Fast initial loss, plateaus over time
-        // Month 1: 1.5x multiplier, Month 6: 0.5x, Month 12+: 0.1x
-        const monthMultiplier = Math.max(0.1, 1.5 - (p * 0.15));
-        weightLostThisPeriod = weightLossPerWeek * daysPerWeek * weeksThisPeriod * intensity * (1 / 7) * monthMultiplier;
-      } else {
-        // Linear for exercise
-        weightLostThisPeriod = weightLossPerWeek * daysPerWeek * weeksThisPeriod * intensity * (1 / 7);
-      }
+    if (weeksThisPeriod > 0 && scenarioType === 'diet') {
+      const monthMultiplier = Math.max(0.1, 1.5 - (p * 0.15));
+      weightLostThisPeriod = weightLossPerWeek * daysPerWeek * weeksThisPeriod * intensity * (1 / 7) * monthMultiplier;
       weightLost += weightLostThisPeriod;
     }
 
-    const healthImprovement = Math.min(
-      healthScoreBase * intensity * (daysPerWeek / 7),
-      40
-    );
-    
-    if (isMonthly) {
-      healthScore = Math.min(50 + healthImprovement * Math.log2((p / 12) + 1), 95);
-    } else {
-      healthScore = Math.min(50 + healthImprovement * Math.log2(p + 1), 95);
-    }
-
-    const dataPoint: any = {
-      healthScore: Math.round(healthScore),
+    const dataPoint: Record<string, number> = {
+      [isMonthly ? 'month' : 'year']: p,
     };
-    
-    if (isMonthly) {
-      dataPoint.month = p;
-    } else {
-      dataPoint.year = p;
-    }
 
     if (moneySaved > 0) dataPoint.moneySaved = Math.round(moneySaved);
     if (cumulativeCalories > 0) dataPoint.caloriesBurned = Math.round(cumulativeCalories);
@@ -98,14 +71,6 @@ export const healthProjectionEngine: EngineFunction = (inputs, config) => {
       milestones.push({ month: 1, label: `Month 1 completed! Initial adaptation phase.`, value: 1 });
     }
 
-    if (healthScore >= 80 && p > 0 && chartData[p - 1]?.healthScore < 80) {
-      milestones.push({
-        [isMonthly ? 'month' : 'year']: p,
-        label: `Health score reaches "Excellent" (${Math.round(healthScore)})`,
-        value: Math.round(healthScore),
-      });
-    }
-    
     if (scenarioType === 'habit_cessation' && moneySaved > 100000 && chartData[p - 1]?.moneySaved < 100000) {
       milestones.push({
         [isMonthly ? 'month' : 'year']: p,
@@ -119,59 +84,102 @@ export const healthProjectionEngine: EngineFunction = (inputs, config) => {
   const totalWeightLost = weightLost;
   const totalMoneySaved = moneySaved;
   const totalUnits = cumulativeUnits;
-  const totalSessions = Math.round((daysPerWeek / 7) * totalWeeks * 7);
 
-  const summaryEntries: Record<string, { label: string; value: string; highlight?: boolean }> = {
-    healthScore: {
-      label: 'Health Vitality Index',
-      value: `${Math.round(healthScore)} pts`,
+  // Distance calculations
+  let totalDistanceKm = 0;
+  if (unitLabel === 'Step') {
+    totalDistanceKm = totalUnits * 0.0008; // 10,000 steps ~ 8km
+  } else if (unitLabel === 'km') {
+    totalDistanceKm = totalUnits;
+  }
+
+  // Heart Health Improvement Calculation
+  const timeFactor = isMonthly ? (periods / 12) : periods;
+  const healthImprovementPct = Math.min(Math.round(healthScoreBase * intensity * (daysPerWeek / 7) * Math.log2(timeFactor + 1)), 85);
+
+  const summaryEntries: Record<string, import('@/types/engine').SummaryItem> = {};
+
+  // Primary metric: Heart Health Improvement
+  if (healthImprovementPct > 0) {
+    summaryEntries.heartHealth = {
+      label: scenarioType === 'exercise' ? 'Cardiovascular Improvement' 
+           : scenarioType === 'diet' ? 'Metabolic Health Improvement'
+           : scenarioType === 'sleep' ? 'Recovery & Cognitive Improvement'
+           : scenarioType === 'habit_cessation' ? 'Health Recovery'
+           : 'Wellness Improvement',
+      value: `+${healthImprovementPct}%`,
       highlight: true,
-    },
-  };
+    };
+  }
 
-  // Dynamic Summaries based on Scenario
-  if (scenarioType === 'habit_cessation') {
+  if (scenarioType === 'exercise') {
+    summaryEntries.caloriesBurned = {
+      label: 'Total Calories Burned',
+      value: `${formatNum(Math.round(totalCalories))} kcal`,
+      highlight: false,
+    };
+    
+    if (totalDistanceKm > 0) {
+      summaryEntries.distance = {
+        label: 'Total Distance',
+        value: `~${formatNum(Math.round(totalDistanceKm))} km`,
+      };
+      summaryEntries.marathons = {
+        label: 'Equivalent Marathons',
+        value: `${formatNum(Math.round(totalDistanceKm / 42.195))} 🏃`,
+      };
+    }
+
+    if (totalCalories > 0) {
+      const weightLossKg = (totalCalories / 7700) * 0.5; // Realistic 50% net loss after metabolic adaptation
+      summaryEntries.weightEquivalent = {
+        label: 'Potential Weight Loss',
+        value: `~${weightLossKg > 10 ? Math.round(weightLossKg) : weightLossKg.toFixed(1)} kg`,
+      };
+    }
+  } else if (scenarioType === 'habit_cessation') {
     summaryEntries.unitsAvoided = {
       label: `${unitPlural} Avoided`,
       value: `${formatNum(Math.round(totalUnits))}`,
+      highlight: false,
     };
-  } else if (scenarioType === 'exercise') {
-    summaryEntries.caloriesBurned = {
-      label: 'Total Calories Burned',
-      value: `${formatNum(Math.round(totalCalories))} cal`,
+  } else if (scenarioType === 'diet') {
+    summaryEntries.totalUnits = {
+      label: `Total ${unitPlural}`,
+      value: `${formatNum(Math.round(totalUnits))} ${unitLabel}`,
+      highlight: false,
     };
     if (totalWeightLost > 0.5) {
       summaryEntries.weightLost = {
         label: 'Potential Weight Loss',
-        value: `${totalWeightLost.toFixed(1)} kg`,
+        value: `~${totalWeightLost > 10 ? Math.round(totalWeightLost) : totalWeightLost.toFixed(1)} kg`,
+      };
+    } else if (totalCalories > 0) {
+      const weightLossKg = (totalCalories / 7700) * 0.5;
+      summaryEntries.weightEquivalent = {
+        label: 'Potential Weight Loss',
+        value: `~${weightLossKg > 10 ? Math.round(weightLossKg) : weightLossKg.toFixed(1)} kg`,
       };
     }
-  } else if (scenarioType === 'hydration' || scenarioType === 'sleep' || scenarioType === 'diet' || scenarioType === 'mindfulness') {
+  } else {
     summaryEntries.totalUnits = {
       label: `Total ${unitPlural}`,
       value: `${formatNum(Math.round(totalUnits))} ${unitLabel}`,
+      highlight: false,
     };
-    if (scenarioType === 'diet' && totalWeightLost > 0.5) {
-      summaryEntries.weightLost = {
-        label: 'Potential Weight Loss',
-        value: `${totalWeightLost.toFixed(1)} kg`,
-      };
-    }
   }
 
-  summaryEntries.totalSessions = {
-    label: scenarioType === 'sleep' || scenarioType === 'habit_cessation' ? 'Total Days' : 'Total Sessions',
-    value: `${formatNum(totalSessions)}`,
-  };
+  // Removed redundant totalSessions assignment since totalUnits already covers the primary metric
 
   if (totalMoneySaved > 0) {
     summaryEntries.moneySaved = {
       label: `Money Saved`,
       value: `${curr.symbol}${Math.round(totalMoneySaved).toLocaleString(curr.locale)}`,
+      highlight: scenarioType === 'habit_cessation',
     };
   } else if (totalMoneySaved < 0) {
     summaryEntries.moneySpent = {
-      label: `Est. Cost`,
+      label: `Est. Additional Cost`,
       value: `${curr.symbol}${Math.abs(Math.round(totalMoneySaved)).toLocaleString(curr.locale)}`,
     };
   }
@@ -180,7 +188,7 @@ export const healthProjectionEngine: EngineFunction = (inputs, config) => {
     summary: summaryEntries,
     chartData,
     milestones,
-    insights: generateHealthInsights(scenarioType, periods, isMonthly, daysPerWeek, totalCalories, totalMoneySaved, totalUnits, unitPlural, intensity, curr),
+    insights: generateHealthInsights(scenarioType, periods, isMonthly, daysPerWeek, totalCalories, totalMoneySaved, totalUnits, unitPlural, intensity, curr, totalDistanceKm),
   };
 };
 
@@ -194,14 +202,13 @@ function generateHealthInsights(
   totalUnits: number,
   unitPlural: string,
   intensity: number,
-  curr: any
+  curr: { symbol: string; locale: string },
+  totalDistanceKm: number
 ): string[] {
   const insights: string[] = [];
   const durationStr = isMonthly ? `${periods} months` : `${periods} years`;
 
-  insights.push(
-    `Consistency matters more than intensity. ${daysPerWeek} days per week for ${durationStr} builds lasting habits.`
-  );
+  insights.push(`Consistency matters more than intensity. ${daysPerWeek} days per week for ${durationStr} builds lasting habits.`);
 
   if (scenarioType === 'habit_cessation') {
     insights.push(`Your body begins repairing cellular damage within weeks of quitting. Over ${durationStr}, the risk of cardiovascular diseases drops drastically.`);
@@ -210,14 +217,14 @@ function generateHealthInsights(
     }
   }
 
-  if (scenarioType === 'diet') {
-    insights.push(`Weight loss is non-linear. You'll likely see a sharp drop initially (water weight), followed by a steady phase, and eventually a plateau as your metabolism adapts.`);
-  }
-
-  if (scenarioType === 'exercise' && totalCalories > 100000) {
-    insights.push(
-      `Burning ${formatNum(Math.round(totalCalories))} calories is equivalent to losing approximately ${(totalCalories / 7700).toFixed(1)} kg of body fat.`
-    );
+  if (scenarioType === 'exercise') {
+    if (totalDistanceKm > 1000) {
+      insights.push(`You will have covered ${formatNum(Math.round(totalDistanceKm))} km, which is roughly equivalent to running ${Math.round(totalDistanceKm / 42.195)} marathons!`);
+    }
+    if (totalCalories > 50000) {
+      const maxWeightKg = totalCalories / 7700;
+      insights.push(`Burning ${formatNum(Math.round(totalCalories))} calories represents an energy expenditure equivalent to ${Math.round(maxWeightKg)} kg of fat. Note that actual weight loss is affected by diet and metabolic adaptation.`);
+    }
   }
   
   if (scenarioType === 'sleep') {
@@ -225,20 +232,10 @@ function generateHealthInsights(
   }
 
   if (moneySaved > 0) {
-    insights.push(
-      `Beyond health benefits, you would save ${curr.symbol}${Math.round(moneySaved).toLocaleString(curr.locale)} — money that can be invested for further growth.`
-    );
+    insights.push(`Beyond health benefits, you would save ${curr.symbol}${Math.round(moneySaved).toLocaleString(curr.locale)} — money that can be invested for further growth.`);
   }
 
-  if (intensity >= 1.2 && scenarioType === 'exercise') {
-    insights.push(
-      'High intensity amplifies results but also increases injury risk. Balance push with recovery.'
-    );
-  }
-
-  insights.push(
-    'Studies show that habits formed over 66+ days become automatic. The first 3 months are the hardest — after that, it gets easier.'
-  );
+  insights.push('Studies show that habits formed over 66+ days become automatic. The first 3 months are the hardest — after that, it gets easier.');
 
   return insights;
 }

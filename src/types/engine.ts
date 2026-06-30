@@ -1,12 +1,14 @@
 // Engine input/output type definitions
 
 export interface ChartDataPoint {
-  year: number;
-  [key: string]: number;
+  year?: number;
+  month?: number;
+  [key: string]: number | undefined;
 }
 
 export interface Milestone {
-  year: number;
+  year?: number;
+  month?: number;
   label: string;
   value: number;
 }

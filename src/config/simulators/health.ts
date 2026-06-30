@@ -25,7 +25,7 @@ const createHealthSim = (
     
     customInputs = [
       { name: 'years', label: 'Duration', type: 'slider', defaultValue: 5, min: 1, max: 20, step: 1, suffixStr: ' years', validation: [] },
-      { name: 'habitCost', label: `Daily Spent on Habit`, type: 'slider', defaultValue: moneySaved, min: 0, max: 1000, step: 10, prefixStr: '₹', validation: [] }
+      { name: 'habitCost', label: `Daily Spent on Habit`, type: 'slider', defaultValue: moneySaved, min: 0, max: 1000, step: 10, prefixStr: '$', validation: [] }
     ];
   } else if (scenarioType === 'exercise') {
     if (cals > 0) chartLines.push({ key: 'caloriesBurned', label: 'Calories Burned', color: '#f59e0b' });

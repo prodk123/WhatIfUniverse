@@ -6,7 +6,7 @@ import { roiCalculatorEngine } from './roi-calculator';
 import { linearProjectionEngine } from './linear-projection';
 
 // Fallback empty engine
-const fallbackEngine: EngineFunction = (inputs, config) => {
+const fallbackEngine: EngineFunction = (_inputs, _config) => {
   return {
     summary: {},
     chartData: [],

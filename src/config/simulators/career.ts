@@ -1,4 +1,4 @@
-import { SimulatorConfig } from '@/types/simulator';
+import { SimulatorConfig, InputField } from '@/types/simulator';
 
 const createCareerSim = (
   slug: string,
@@ -34,9 +34,9 @@ const createCareerSim = (
   relatedSlugs: [],
 });
 
-const defaultCurrentSalary = { name: 'currentSalary', label: 'Current Monthly Salary', type: 'number', defaultValue: 100000, min: 20000, max: 1000000, step: 10000, prefix: '₹', validation: [] };
-const defaultCurrentExpenses = { name: 'currentExpenses', label: 'Current Monthly Expenses', type: 'number', defaultValue: 40000, min: 10000, max: 500000, step: 5000, prefix: '₹', validation: [] };
-const defaultYears = { name: 'years', label: 'Years to Project', type: 'slider', defaultValue: 5, min: 1, max: 20, step: 1, suffixStr: ' years', validation: [] };
+const defaultCurrentSalary: InputField = { name: 'currentSalary', label: 'Current Monthly Salary', type: 'number', defaultValue: 100000, min: 20000, max: 1000000, step: 10000, prefix: '$', validation: [] };
+const defaultCurrentExpenses: InputField = { name: 'currentExpenses', label: 'Current Monthly Expenses', type: 'number', defaultValue: 40000, min: 10000, max: 500000, step: 5000, prefix: '$', validation: [] };
+const defaultYears: InputField = { name: 'years', label: 'Years to Project', type: 'slider', defaultValue: 5, min: 1, max: 20, step: 1, suffixStr: ' years', validation: [] };
 
 export const careerSimulators: SimulatorConfig[] = [
   createCareerSim('move-to-dubai', 'What If I Move to Dubai?', 'Tax-free salary vs higher cost of living. Compare your home country lifestyle with Dubai.', [
@@ -58,8 +58,8 @@ export const careerSimulators: SimulatorConfig[] = [
   createCareerSim('switch-to-tech', 'What If I Switch to Tech?', 'Higher starting salary after a bootcamp.', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'bootcampCost', label: 'Bootcamp / Upskilling Cost', type: 'number', defaultValue: 100000, min: 0, max: 1000000, step: 10000, prefix: '₹', validation: [] },
-    { name: 'newSalary', label: 'Expected Tech Salary (Monthly)', type: 'number', defaultValue: 150000, min: 50000, max: 1000000, step: 10000, prefix: '₹', validation: [] },
+    { name: 'bootcampCost', label: 'Bootcamp / Upskilling Cost', type: 'number', defaultValue: 100000, min: 0, max: 1000000, step: 10000, prefix: '$', validation: [] },
+    { name: 'newSalary', label: 'Expected Tech Salary (Monthly)', type: 'number', defaultValue: 150000, min: 50000, max: 1000000, step: 10000, prefix: '$', validation: [] },
     defaultYears
   ], 20),
   
@@ -73,37 +73,37 @@ export const careerSimulators: SimulatorConfig[] = [
   createCareerSim('freelance-fulltime', 'What If I Go Freelance?', 'Variable income vs fixed salary.', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'newSalary', label: 'Expected Freelance Income (Monthly)', type: 'number', defaultValue: 200000, min: 50000, max: 2000000, step: 10000, prefix: '₹', validation: [] },
-    { name: 'newExpenses', label: 'Freelance Expenses (Software, Taxes)', type: 'number', defaultValue: 20000, min: 5000, max: 200000, step: 5000, prefix: '₹', validation: [] },
+    { name: 'newSalary', label: 'Expected Freelance Income (Monthly)', type: 'number', defaultValue: 200000, min: 50000, max: 2000000, step: 10000, prefix: '$', validation: [] },
+    { name: 'newExpenses', label: 'Freelance Expenses (Software, Taxes)', type: 'number', defaultValue: 20000, min: 5000, max: 200000, step: 5000, prefix: '$', validation: [] },
     defaultYears
   ], 20),
   
   createCareerSim('join-early-startup', 'What If I Join an Early Stage Startup?', 'Lower base salary but equity potential (equity not factored here).', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'newSalary', label: 'Startup Base Salary (Monthly)', type: 'number', defaultValue: 80000, min: 20000, max: 500000, step: 5000, prefix: '₹', validation: [] },
+    { name: 'newSalary', label: 'Startup Base Salary (Monthly)', type: 'number', defaultValue: 80000, min: 20000, max: 500000, step: 5000, prefix: '$', validation: [] },
     defaultYears
   ], 25),
   
   createCareerSim('remote-work', 'What If I Work Remotely?', 'Same salary, but moving to a low-cost city.', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'newExpenses', label: 'Remote City Expenses (Monthly)', type: 'number', defaultValue: 20000, min: 10000, max: 200000, step: 5000, prefix: '₹', validation: [] },
+    { name: 'newExpenses', label: 'Remote City Expenses (Monthly)', type: 'number', defaultValue: 20000, min: 10000, max: 200000, step: 5000, prefix: '$', validation: [] },
     defaultYears
   ], 25),
   
   createCareerSim('moonlighting', 'What If I Take a Second Job?', 'Extra income vs burnout.', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'newSalary', label: 'Total Combined Income (Monthly)', type: 'number', defaultValue: 180000, min: 50000, max: 1000000, step: 10000, prefix: '₹', validation: [] },
+    { name: 'newSalary', label: 'Total Combined Income (Monthly)', type: 'number', defaultValue: 180000, min: 50000, max: 1000000, step: 10000, prefix: '$', validation: [] },
     defaultYears
   ], 30),
   
   createCareerSim('digital-nomad', 'What If I Become a Digital Nomad?', 'Earning in USD, spending in low cost countries.', [
     defaultCurrentSalary,
     defaultCurrentExpenses,
-    { name: 'newSalary', label: 'Nomad Income (Monthly)', type: 'number', defaultValue: 300000, min: 50000, max: 1000000, step: 10000, prefix: '₹', validation: [] },
-    { name: 'newExpenses', label: 'Nomad Lifestyle Expenses (Monthly)', type: 'number', defaultValue: 150000, min: 30000, max: 500000, step: 10000, prefix: '₹', validation: [] },
+    { name: 'newSalary', label: 'Nomad Income (Monthly)', type: 'number', defaultValue: 300000, min: 50000, max: 1000000, step: 10000, prefix: '$', validation: [] },
+    { name: 'newExpenses', label: 'Nomad Lifestyle Expenses (Monthly)', type: 'number', defaultValue: 150000, min: 30000, max: 500000, step: 10000, prefix: '$', validation: [] },
     defaultYears
   ], 20),
 ];

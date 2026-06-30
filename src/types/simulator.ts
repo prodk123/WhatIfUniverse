@@ -64,6 +64,8 @@ export interface SimulatorConfig {
   inputs: InputField[];
   engine: EngineType;
   engineConfig: Record<string, unknown>;
+  defaultCurrencyCode?: string;
+  isCurrencyLocked?: boolean;
   notice?: string;
   insights: InsightTemplate[];
   faqs: FAQ[];
@@ -79,4 +81,6 @@ export interface CategoryConfig {
   description: string;
   icon: string;
   color: string;
+  seoContent?: string;
+  faqs?: FAQ[];
 }

@@ -61,6 +61,68 @@ To enable it, add the following Secrets to your GitHub repository (`Settings > S
 - `VPS_USERNAME`: `root` (or your deployment user)
 - `VPS_SSH_KEY`: The private SSH key used to access your VPS
 
+## AWS EC2 Specific Deployment Guide
+
+If you are using AWS EC2 (e.g. with free credits), follow these exact steps to prepare your server before hooking it up to Cloudflare and GitHub Actions:
+
+### 1. Launching the EC2 Instance
+1. Log in to the **AWS Management Console** and navigate to **EC2**.
+2. Click **Launch Instance**.
+3. **Name:** Give your instance a name (e.g., `what-if-universe-prod`).
+4. **Application and OS Images (AMI):** Select **Ubuntu** (Ubuntu Server 24.04 LTS or similar).
+5. **Instance Type:** Select **t2.micro** or **t3.micro** (these are often eligible for the Free Tier).
+6. **Key Pair (login):** 
+   - Click **Create new key pair**.
+   - Name it (e.g., `aws-whatif-key`).
+   - Keep the format as RSA and `.pem`.
+   - Click **Create key pair**. *The file will immediately download to your computer. Keep it safe!*
+7. **Network Settings:**
+   - Ensure "Auto-assign public IP" is **Enable**.
+   - Check the boxes for:
+     - **Allow SSH traffic from** (Anywhere `0.0.0.0/0`)
+     - **Allow HTTPS traffic from the internet**
+     - **Allow HTTP traffic from the internet**
+8. Click **Launch Instance**.
+
+### 2. Setting up an Elastic IP (Critical)
+By default, your EC2 instance will get a new IP address every time it restarts. This will break your Cloudflare DNS! You need a permanent IP.
+1. In the left sidebar of the EC2 dashboard, scroll down to **Network & Security** and click **Elastic IPs**.
+2. Click **Allocate Elastic IP address** and hit Allocate.
+3. Select your newly created Elastic IP, click the **Actions** dropdown, and choose **Associate Elastic IP address**.
+4. Choose the Instance you just created, and click **Associate**.
+5. *Copy this new Elastic IP address! This is the permanent IP you will use for Cloudflare and GitHub.*
+
+### 3. Server Initialization
+You need to install Docker on your new AWS server so it can run the platform.
+1. SSH into your server using the `.pem` key you downloaded:
+   ```bash
+   ssh -i /path/to/your/aws-whatif-key.pem ubuntu@<your-elastic-ip>
+   ```
+   *(Note: The username for AWS Ubuntu is always `ubuntu`, not `root`)*
+
+2. Once logged in, run the Docker installation commands:
+   ```bash
+   curl -fsSL https://get.docker.com -o get-docker.sh
+   sudo sh get-docker.sh
+   sudo apt install docker-compose-plugin -y
+   ```
+
+3. Give your user permission to run Docker without `sudo`:
+   ```bash
+   sudo usermod -aG docker ubuntu
+   ```
+   *You must type `exit` to disconnect from the server, then SSH back in for this permission to take effect.*
+
+### 4. Hooking up the Pipeline
+Now that the server is ready, hook it up to the systems we set up:
+1. **Cloudflare:** Go to your Cloudflare DNS settings and point the `A` record to your **Elastic IP**.
+2. **GitHub Secrets:** Go to your GitHub Repository > Settings > Secrets and variables > Actions. Add the following:
+   - `VPS_HOST`: Your **Elastic IP**
+   - `VPS_USERNAME`: `ubuntu`
+   - `VPS_SSH_KEY`: Open your downloaded `.pem` file in a text editor (like Notepad), copy ALL the text (including `-----BEGIN RSA PRIVATE KEY-----` and `-----END RSA PRIVATE KEY-----`), and paste it here.
+
+Push your code to the `main` branch, and the GitHub Action will automatically deploy your site to AWS!
+
 ## Security Note: CVE-2025-29927 Mitigation
 
 This application is protected against the Next.js middleware bypass vulnerability (CVE-2025-29927) via two layers:

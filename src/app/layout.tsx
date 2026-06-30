@@ -44,7 +44,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-gray-100">
+      <body className="antialiased min-h-screen flex flex-col transition-colors duration-300 dark:bg-slate-950 dark:text-gray-100 overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <CurrencyProvider>
             <div className="flex flex-col min-h-screen">

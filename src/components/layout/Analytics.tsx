@@ -3,26 +3,38 @@ import { siteConfig } from '@/config/site';
 
 export function Analytics() {
   const gaId = siteConfig.gaMeasurementId;
-
-  if (!gaId) return null;
+  const adsenseId = siteConfig.adsenseClient;
 
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+      {adsenseId && (
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
+      )}
+      
+      {gaId && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
 
-          gtag('config', '${gaId}', {
-            page_path: window.location.pathname,
-          });
-        `}
-      </Script>
+              gtag('config', '${gaId}', {
+                page_path: window.location.pathname,
+              });
+            `}
+          </Script>
+        </>
+      )}
     </>
   );
 }

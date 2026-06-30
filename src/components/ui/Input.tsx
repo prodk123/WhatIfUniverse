@@ -22,6 +22,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             ref={ref}
+            aria-label={label}
             className={`flex h-10 w-full rounded-md border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white px-3 py-2 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors
               ${prefixStr ? (prefixStr.length > 2 ? 'pl-16' : prefixStr.length > 1 ? 'pl-10' : 'pl-8') : ''}
               ${suffixStr ? 'pr-8' : ''}

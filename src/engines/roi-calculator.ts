@@ -1,15 +1,16 @@
 import { EngineFunction } from '@/types/engine';
 
 export const roiCalculatorEngine: EngineFunction = (inputs, config) => {
-  const curr = (config.currency as any) || { symbol: '₹', locale: 'en-IN' };
-  const expectedSalaryWithoutDegree = inputs.expectedSalaryWithoutDegree || 0;
-  const tuitionCost = inputs.tuitionCost || 0;
-  const postGradSalary = inputs.postGradSalary || 0;
-  const years = inputs.years || 10;
+  const curr = (config.currency as { symbol: string; locale: string }) || { symbol: '₹', locale: 'en-IN' };
+  const expectedSalaryWithoutDegree = Math.max(0, Number(inputs.expectedSalaryWithoutDegree) || 0);
+  const tuitionCost = Math.max(0, Number(inputs.tuitionCost) || 0);
+  const postGradSalary = Math.max(0, Number(inputs.postGradSalary) || 0);
+  const partTimeSalary = Math.max(0, Number(inputs.partTimeSalary) || 0);
+  const years = Math.max(1, Number(inputs.years) || 10);
   
-  const studyYears = inputs.studyYears || (config.studyYears as number) || 2;
+  const studyYears = Math.max(0.1, Number(inputs.studyYears) || Number(config.studyYears) || 2);
   const salaryGrowth = 0.05; // 5% annual raise
-  const loanInterestRate = (inputs.loanInterestRate || 0) / 100;
+  const loanInterestRate = Math.max(0, Number(inputs.loanInterestRate) || 0) / 100;
   
   const chartData = [];
   const milestones = [];
@@ -44,6 +45,8 @@ export const roiCalculatorEngine: EngineFunction = (inputs, config) => {
     if (year >= studyYears) {
       currentWealthWithDegree += currentSalaryWithDegree;
       currentSalaryWithDegree *= (1 + salaryGrowth);
+    } else {
+      currentWealthWithDegree += partTimeSalary;
     }
 
     if (currentWealthWithDegree < 0 && loanInterestRate > 0) {
@@ -81,7 +84,3 @@ export const roiCalculatorEngine: EngineFunction = (inputs, config) => {
   };
 };
 
-function formatNum(num: number): string {
-  const absNum = Math.abs(num);
-  return num < 0 ? `-${absNum.toLocaleString('en-IN')}` : absNum.toLocaleString('en-IN');
-}

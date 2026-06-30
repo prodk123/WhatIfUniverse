@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { getSimulatorBySlug, getSimulatorsByCategory } from '@/config/simulators';
 import { Card } from '@/components/ui/Card';
 
-export function RelatedSimulators({ slugs, currentCategory }: { slugs: string[]; currentCategory: string }) {
+export function RelatedSimulators({ slugs, currentCategory, title }: { slugs: string[]; currentCategory?: string; title?: string }) {
   // Try to use provided related slugs first, then fallback to others in the same category
   let relatedSimulators = slugs
     .map(getSimulatorBySlug)
     .filter((s) => s !== undefined)
     .slice(0, 3);
     
-  if (relatedSimulators.length < 3) {
+  if (relatedSimulators.length < 3 && currentCategory) {
     const categorySims = getSimulatorsByCategory(currentCategory)
       .filter((s) => !slugs.includes(s.slug))
       .slice(0, 3 - relatedSimulators.length);
@@ -22,7 +22,7 @@ export function RelatedSimulators({ slugs, currentCategory }: { slugs: string[];
 
   return (
     <section className="border-t border-gray-200 dark:border-slate-800 pt-12 transition-colors duration-300">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Keep Exploring</h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{title || "Keep Exploring"}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {relatedSimulators.map((simulator) => {
           if (!simulator) return null;

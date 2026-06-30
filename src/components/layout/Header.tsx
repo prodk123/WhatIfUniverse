@@ -1,10 +1,18 @@
+'use client';
+
 import Link from 'next/link';
-import React from 'react';
-import { siteConfig } from '@/config/site';
+import React, { Suspense } from 'react';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { CurrencySelector } from './CurrencySelector';
 import { ThemeToggle } from './ThemeToggle';
 
-export function Header() {
+function HeaderContent() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const isEmbed = searchParams.get('embed') === 'true' || pathname?.startsWith('/embed');
+
+  if (isEmbed) return null;
+
   return (
     <header className="border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm transition-colors duration-300">
       <div className="container mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
@@ -18,7 +26,7 @@ export function Header() {
           <Link href="/category/health" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Health</Link>
           <Link href="/category/education" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Education</Link>
           <Link href="/category/business" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Business</Link>
-          <Link href="/category/lifestyle" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Lifestyle</Link>
+          <Link href="/guides" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Guides</Link>
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -27,5 +35,13 @@ export function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+export function Header() {
+  return (
+    <Suspense fallback={<div className="h-16 border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 sticky top-0" />}>
+      <HeaderContent />
+    </Suspense>
   );
 }

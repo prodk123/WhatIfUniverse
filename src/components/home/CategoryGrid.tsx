@@ -5,9 +5,9 @@ import React from 'react';
 import { categories } from '@/config/categories';
 import { Icons } from '@/components/ui/Icons';
 import { Card } from '@/components/ui/Card';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -17,7 +17,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { 
     opacity: 1, 
@@ -65,21 +65,29 @@ export function CategoryGrid() {
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300" style={{ backgroundImage: `linear-gradient(135deg, ${category.color}, transparent)` }}></div>
                     
                     <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transform group-hover:scale-110 transition-transform duration-300"
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transform group-hover:scale-110 transition-transform duration-300 z-10 relative"
                       style={{ backgroundColor: category.color, color: 'white', boxShadow: `0 4px 20px ${category.color}40` }}
                     >
                       {Icon && <Icon className="w-7 h-7" />}
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{category.name}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-base flex-grow leading-relaxed">{category.description}</p>
-                    <div 
-                      className="mt-8 font-semibold text-sm flex items-center group-hover:opacity-80 transition-opacity"
-                      style={{ color: category.color }}
-                    >
-                      Explore Simulators
-                      <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
+                    <div className="w-[70%] flex flex-col flex-grow z-10 relative">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{category.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-base flex-grow leading-relaxed">{category.description}</p>
+                      <div 
+                        className="mt-8 font-semibold text-sm flex items-center group-hover:opacity-80 transition-opacity"
+                        style={{ color: category.color }}
+                      >
+                        Explore Simulators
+                        <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {/* Caricature Image */}
+                    <div className="absolute right-0 bottom-0 opacity-50 dark:opacity-40 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 z-0 pointer-events-none">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`/images/${category.slug}.png`} alt={category.name} className="w-40 h-40 object-contain drop-shadow-2xl" />
                     </div>
                   </Card>
                 </Link>
