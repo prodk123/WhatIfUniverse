@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/Card';
 import { motion, Variants } from 'framer-motion';
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
@@ -18,7 +18,7 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 1, y: 30 },
   visible: { 
     opacity: 1, 
     y: 0,
@@ -35,7 +35,7 @@ export function CategoryGrid() {
       
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
