@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "tailwindcss -i src/globals.css -o src/tailwind.css && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -31,3 +31,4 @@
     "typescript": "^5"
   }
 }
+
