@@ -12,12 +12,6 @@ module.exports = {
         secondary: "#a1a1aa",
         accent: "#71717a",
         "dark-bg": "#000000",
-        slate: {
-          700: "#27272a",
-          800: "#111111",
-          900: "#050505",
-          950: "#000000",
-        }
       },
       fontFamily: {
         sans: ["Outfit", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
