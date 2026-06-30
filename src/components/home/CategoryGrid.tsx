@@ -60,7 +60,7 @@ export function CategoryGrid() {
             return (
               <motion.div key={category.slug} variants={itemVariants}>
                 <Link href={`/category/${category.slug}`}>
-                  <Card className="h-full p-8 flex flex-col items-start transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 group overflow-hidden relative">
+                  <Card className="h-full min-h-[220px] p-8 flex flex-col items-start transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 group overflow-hidden relative">
                     {/* Hover gradient effect */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300" style={{ backgroundImage: `linear-gradient(135deg, ${category.color}, transparent)` }}></div>
                     
@@ -85,9 +85,9 @@ export function CategoryGrid() {
                     </div>
                     
                     {/* Caricature Image */}
-                    <div className="absolute right-0 bottom-0 opacity-50 dark:opacity-40 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 z-0 pointer-events-none">
+                    <div className="absolute right-0 bottom-0 opacity-50 dark:opacity-40 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 z-0 pointer-events-none overflow-hidden" style={{ width: '160px', height: '160px' }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/images/${category.slug}.png`} alt={category.name} className="w-40 h-40 object-contain drop-shadow-2xl" />
+                      <img src={`/images/${category.slug}.png`} alt={category.name} style={{ width: '160px', height: '160px', objectFit: 'contain' }} className="drop-shadow-2xl" />
                     </div>
                   </Card>
                 </Link>
