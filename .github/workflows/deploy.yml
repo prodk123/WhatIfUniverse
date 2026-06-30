@@ -13,13 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Build Docker Image
+        run: docker build -t whatif-web:latest .
+
+      - name: Save Docker Image
+        run: docker save whatif-web:latest -o whatif-web.tar
+
       - name: Copy files to VPS
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "."
+          source: "whatif-web.tar,docker-compose.yml,nginx/"
           target: "/opt/whatifuniverse"
 
       - name: Deploy to VPS
@@ -30,6 +36,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/whatifuniverse
+            docker load -i whatif-web.tar
             docker compose down
-            docker compose up -d --build
+            docker compose up -d
+            rm whatif-web.tar
             docker image prune -f
