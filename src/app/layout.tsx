@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '../tailwind.css';
+import './globals.css';
 import { siteConfig } from '@/config/site';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -61,3 +61,4 @@ export default function RootLayout({
     </html>
   );
 }
+
