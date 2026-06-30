@@ -4,133 +4,92 @@ import Link from 'next/link';
 import React from 'react';
 import { categories } from '@/config/categories';
 import { Icons } from '@/components/ui/Icons';
+import { Card } from '@/components/ui/Card';
 import { motion, Variants } from 'framer-motion';
 
 const containerVariants: Variants = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: {
+      staggerChildren: 0.1,
+    },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  hidden: { opacity: 1, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" }
+  },
 };
 
 export function CategoryGrid() {
   return (
-    <section
-      id="categories"
-      style={{
-        padding: '80px 0',
-        backgroundColor: '#f9fafb',
-        borderTop: '1px solid #f3f4f6',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 32px' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#111827', marginBottom: '16px' }}>
-            Explore by Category
-          </h2>
-          <p style={{ fontSize: '1.125rem', color: '#6b7280', maxWidth: '42rem', margin: '0 auto' }}>
+    <section id="categories" className="py-20 bg-gray-50 dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 relative overflow-hidden transition-colors duration-300">
+      {/* Background decorations */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-accent opacity-5 blur-[100px] rounded-full"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary opacity-5 blur-[120px] rounded-full"></div>
+      
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
+        <motion.div 
+          initial={{ opacity: 1, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Explore by Category</h2>
+          <p className="text-lg text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
             Choose an area of your life to start simulating alternate futures.
           </p>
-        </div>
-
-        {/* Grid */}
-        <motion.div
+        </motion.div>
+        
+        <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '24px',
-          }}
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {categories.map((category) => {
             const Icon = Icons[category.icon as keyof typeof Icons];
-
+            
             return (
               <motion.div key={category.slug} variants={itemVariants}>
-                <Link href={`/category/${category.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-                  <div
-                    style={{
-                      backgroundColor: '#ffffff',
-                      borderRadius: '12px',
-                      border: '1px solid #e5e7eb',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                      padding: '32px',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      minHeight: '200px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {/* Colored icon circle */}
-                    <div
-                      style={{
-                        width: '56px',
-                        height: '56px',
-                        borderRadius: '16px',
-                        backgroundColor: category.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '24px',
-                        boxShadow: `0 4px 20px ${category.color}40`,
-                        flexShrink: 0,
-                      }}
+                <Link href={`/category/${category.slug}`}>
+                  <Card className="h-full p-8 flex flex-col items-start transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 group overflow-hidden relative">
+                    {/* Hover gradient effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300" style={{ backgroundImage: `linear-gradient(135deg, ${category.color}, transparent)` }}></div>
+                    
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transform group-hover:scale-110 transition-transform duration-300 z-10 relative"
+                      style={{ backgroundColor: category.color, color: 'white', boxShadow: `0 4px 20px ${category.color}40` }}
                     >
-                      {Icon && <Icon style={{ width: '28px', height: '28px', color: 'white' }} />}
+                      {Icon && <Icon className="w-7 h-7" />}
                     </div>
-
-                    {/* Text content */}
-                    <div style={{ flex: 1, zIndex: 1, position: 'relative' }}>
-                      <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#111827', marginBottom: '12px' }}>
-                        {category.name}
-                      </h3>
-                      <p style={{ color: '#6b7280', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px' }}>
-                        {category.description}
-                      </p>
-                      <div style={{ color: category.color, fontWeight: 600, fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div className="w-[70%] flex flex-col flex-grow z-10 relative">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{category.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-base flex-grow leading-relaxed">{category.description}</p>
+                      <div 
+                        className="mt-8 font-semibold text-sm flex items-center group-hover:opacity-80 transition-opacity"
+                        style={{ color: category.color }}
+                      >
                         Explore Simulators
-                        <svg style={{ width: '20px', height: '20px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </div>
                     </div>
-
-                    {/* Caricature image - constrained absolutely */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        right: 0,
-                        bottom: 0,
-                        width: '130px',
-                        height: '130px',
-                        overflow: 'hidden',
-                        opacity: 0.4,
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                      }}
-                    >
+                    
+                    {/* Caricature Image */}
+                    <div className="absolute right-0 bottom-0 opacity-50 dark:opacity-40 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 z-0 pointer-events-none">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/images/${category.slug}.png`}
-                        alt=""
-                        style={{ width: '130px', height: '130px', objectFit: 'contain', display: 'block' }}
-                      />
+                      <img src={`/images/${category.slug}.png`} alt={category.name} className="w-40 h-40 object-contain drop-shadow-2xl" />
                     </div>
-                  </div>
+                  </Card>
                 </Link>
               </motion.div>
             );
