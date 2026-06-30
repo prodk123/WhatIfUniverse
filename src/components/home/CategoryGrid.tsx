@@ -60,7 +60,7 @@ export function CategoryGrid() {
             return (
               <motion.div key={category.slug} variants={itemVariants}>
                 <Link href={`/category/${category.slug}`}>
-                  <Card className="h-full min-h-[220px] p-8 flex flex-col items-start transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 group overflow-hidden relative">
+                  <Card className="h-full p-8 flex flex-col items-start transition-all duration-300 transform hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 group overflow-hidden relative" style={{ minHeight: '220px', maxHeight: '400px', position: 'relative', overflow: 'hidden' }}>
                     {/* Hover gradient effect */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300" style={{ backgroundImage: `linear-gradient(135deg, ${category.color}, transparent)` }}></div>
                     
@@ -68,7 +68,7 @@ export function CategoryGrid() {
                       className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-sm transform group-hover:scale-110 transition-transform duration-300 z-10 relative"
                       style={{ backgroundColor: category.color, color: 'white', boxShadow: `0 4px 20px ${category.color}40` }}
                     >
-                      {Icon && <Icon className="w-7 h-7" />}
+                      {Icon && <Icon className="w-7 h-7" style={{ width: '28px', height: '28px', flexShrink: 0 }} />}
                     </div>
                     <div className="w-[70%] flex flex-col flex-grow z-10 relative">
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{category.name}</h3>
@@ -85,9 +85,9 @@ export function CategoryGrid() {
                     </div>
                     
                     {/* Caricature Image */}
-                    <div className="absolute right-0 bottom-0 opacity-50 dark:opacity-40 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 z-0 pointer-events-none overflow-hidden" style={{ width: '160px', height: '160px' }}>
+                    <div style={{ position: 'absolute', right: 0, bottom: 0, width: '160px', height: '160px', overflow: 'hidden', opacity: 0.5, pointerEvents: 'none', zIndex: 0 }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/images/${category.slug}.png`} alt={category.name} style={{ width: '160px', height: '160px', objectFit: 'contain' }} className="drop-shadow-2xl" />
+                      <img src={`/images/${category.slug}.png`} alt={category.name} style={{ width: '160px', height: '160px', objectFit: 'contain', display: 'block' }} />
                     </div>
                   </Card>
                 </Link>
