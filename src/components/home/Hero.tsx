@@ -94,12 +94,12 @@ export function Hero() {
           className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 text-gray-200 drop-shadow-lg min-h-[120px] md:min-h-[140px] lg:min-h-[180px] flex flex-col justify-end pb-4"
         >
           <span>What If You Could See the Future <br className="hidden md:block" /></span>
-          <div className="mt-2 font-light italic text-gray-400">
+          <span className="block mt-2 font-light italic text-gray-400">
             <span className="text-white">
               {headlineText}
             </span>
             <span className="animate-pulse border-r-2 border-gray-400 ml-1 inline-block h-[40px] md:h-[50px] lg:h-[70px] align-middle -mt-2">&nbsp;</span>
-          </div>
+          </span>
         </motion.h1>
         
         <motion.p 
