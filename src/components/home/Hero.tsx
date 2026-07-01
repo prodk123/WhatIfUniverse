@@ -75,7 +75,7 @@ export function Hero() {
   const headlineText = useTypewriter(headlineOptions);
 
   return (
-    <section className="relative py-24 md:py-32 text-center px-4 overflow-hidden bg-mesh-dark">
+    <section className="relative py-24 md:py-32 text-center px-4 overflow-hidden bg-mesh-dark bg-slate-950">
       <ParticleBackground />
       
       {/* Subtle metallic glow centered */}
