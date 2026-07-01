@@ -117,16 +117,18 @@ export function Hero() {
           transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col sm:flex-row gap-6 items-center"
         >
-          <Link href="#categories">
-            <Button size="lg" className="w-full sm:w-auto !bg-[#050505] border border-white/20 !hover:bg-[#111111] shadow-[0_15px_30px_rgba(255,255,255,0.05)] transition-all transform hover:-translate-y-1 !text-white px-8 py-6 text-lg rounded-xl flex items-center gap-2">
-              Explore Simulators
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-            </Button>
+          <Link 
+            href="#categories"
+            className="w-full sm:w-auto !bg-[#050505] border border-white/20 hover:bg-[#111111] shadow-[0_15px_30px_rgba(255,255,255,0.05)] transition-all transform hover:-translate-y-1 !text-white px-8 h-12 md:h-14 text-lg rounded-xl flex items-center justify-center gap-2 font-medium"
+          >
+            Explore Simulators
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
           </Link>
-          <Link href="/category/money">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto text-gray-400 hover:text-white border-gray-800 hover:border-gray-700 transition-all">
-              Try Financial Scenarios
-            </Button>
+          <Link 
+            href="/category/money"
+            className="w-full sm:w-auto text-gray-400 hover:text-white border border-gray-800 hover:border-gray-700 transition-all px-8 h-12 md:h-14 text-lg rounded-xl flex items-center justify-center font-medium bg-transparent hover:bg-gray-800/50"
+          >
+            Try Financial Scenarios
           </Link>
         </motion.div>
       </motion.div>
