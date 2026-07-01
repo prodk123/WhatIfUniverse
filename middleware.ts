@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
     img-src 'self' blob: data: https://pagead2.googlesyndication.com https://www.google-analytics.com;
     font-src 'self' data: https://fonts.gstatic.com;
     connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com https://stats.g.doubleclick.net;
-    frame-src https://googleads.g.doubleclick.net;
+    frame-src 'self' https://googleads.g.doubleclick.net;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
