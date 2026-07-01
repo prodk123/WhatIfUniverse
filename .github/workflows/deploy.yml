@@ -35,6 +35,9 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            # Clean up disk space before loading the new image
+            docker system prune -a -f
+            
             cd /opt/whatifuniverse
             # Ensure .env.local exists (docker-compose may reference it)
             touch .env.local
