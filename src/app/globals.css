@@ -6,8 +6,9 @@
   :root {
     --app-primary: #050505;
     --app-primary-hover: #27272a;
+    --color-dark-bg: #000000;
   }
-  
+
   .dark {
     --app-primary: #ffffff;
     --app-primary-hover: #e4e4e7;

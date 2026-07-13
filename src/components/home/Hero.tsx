@@ -77,17 +77,17 @@ export function Hero() {
   return (
     <section className="relative py-24 md:py-32 text-center px-4 overflow-hidden bg-mesh-dark bg-slate-950">
       <ParticleBackground />
-      
+
       {/* Subtle metallic glow centered */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-64 bg-white opacity-[0.03] blur-[120px] rounded-full pointer-events-none"></div>
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 1, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 max-w-4xl mx-auto flex flex-col items-center"
       >
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 1, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -101,8 +101,8 @@ export function Hero() {
             <span className="animate-pulse border-r-2 border-gray-400 ml-1 inline-block h-[40px] md:h-[50px] lg:h-[70px] align-middle -mt-2">&nbsp;</span>
           </span>
         </motion.h1>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 1, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -110,21 +110,21 @@ export function Hero() {
         >
           Explore alternate outcomes for money, career, health, education, and life decisions instantly. No signup required.
         </motion.p>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 1, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
           className="flex flex-col sm:flex-row gap-6 items-center"
         >
-          <Link 
+          <Link
             href="#categories"
             className="w-full sm:w-auto !bg-[#050505] border border-white/20 hover:bg-[#111111] shadow-[0_15px_30px_rgba(255,255,255,0.05)] transition-all transform hover:-translate-y-1 !text-white px-8 h-12 md:h-14 text-lg rounded-xl flex items-center justify-center gap-2 font-medium"
           >
             Explore Simulators
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
           </Link>
-          <Link 
+          <Link
             href="/category/money"
             className="w-full sm:w-auto text-gray-400 hover:text-white border border-gray-800 hover:border-gray-700 transition-all px-8 h-12 md:h-14 text-lg rounded-xl flex items-center justify-center font-medium bg-transparent hover:bg-gray-800/50"
           >
