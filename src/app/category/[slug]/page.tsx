@@ -8,6 +8,30 @@ import { Card } from '@/components/ui/Card';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { FAQSection } from '@/components/simulator/FAQSection';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { siteConfig } from '@/config/site';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const category = getCategoryBySlug(resolvedParams.slug);
+
+  if (!category) {
+    return {};
+  }
+
+  return {
+    title: `${category.name} Simulators`,
+    description: category.description,
+    alternates: {
+      canonical: `${siteConfig.url}/category/${category.slug}`,
+    },
+    openGraph: {
+      title: `${category.name} Simulators`,
+      description: category.description,
+      url: `${siteConfig.url}/category/${category.slug}`,
+    }
+  };
+}
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;

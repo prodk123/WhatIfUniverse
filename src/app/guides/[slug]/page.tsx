@@ -24,9 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${guide.title} | What If Universe`,
     description: guide.description,
+    alternates: {
+      canonical: `${siteConfig.url}/guides/${guide.slug}`,
+    },
     openGraph: {
       title: guide.title,
       description: guide.description,
+      url: `${siteConfig.url}/guides/${guide.slug}`,
       type: 'article',
       publishedTime: guide.date,
       images: [

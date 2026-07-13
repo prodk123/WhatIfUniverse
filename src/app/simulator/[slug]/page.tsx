@@ -22,9 +22,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: simulator.title,
     description: simulator.description,
+    alternates: {
+      canonical: `${siteConfig.url}/simulator/${simulator.slug}`,
+    },
     openGraph: {
       title: simulator.title,
       description: simulator.description,
+      url: `${siteConfig.url}/simulator/${simulator.slug}`,
       images: [
         {
           url: ogUrl.toString(),

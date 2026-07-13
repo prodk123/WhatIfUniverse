@@ -24,9 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: permutation.title,
     description: permutation.description,
+    alternates: {
+      canonical: `${siteConfig.url}/simulator/${simulator.slug}/${permutation.permutationSlug}`,
+    },
     openGraph: {
       title: permutation.title,
       description: permutation.description,
+      url: `${siteConfig.url}/simulator/${simulator.slug}/${permutation.permutationSlug}`,
       images: [
         {
           url: ogUrl.toString(),

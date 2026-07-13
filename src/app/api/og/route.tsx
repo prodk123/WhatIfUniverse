@@ -3,13 +3,18 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+// Only allow 3 or 6 digit hex colors to prevent malformed CSS
+// (the value is interpolated into inline style templates).
+const HEX_COLOR = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
     const title = searchParams.get('title');
     const categoryName = searchParams.get('categoryName') || 'What If Universe';
-    const categoryColor = searchParams.get('categoryColor') || '#3B82F6';
+    const rawColor = searchParams.get('categoryColor') || '#3B82F6';
+    const categoryColor = HEX_COLOR.test(rawColor) ? rawColor : '#3B82F6';
 
     return new ImageResponse(
       (
@@ -90,7 +95,8 @@ export async function GET(request: NextRequest) {
         height: 630,
       }
     );
-  } catch {
+  } catch (error) {
+    console.error('OG image generation failed:', error);
     return new Response('Failed to generate image', { status: 500 });
   }
 }

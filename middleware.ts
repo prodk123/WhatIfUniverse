@@ -2,14 +2,11 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  
-  // Relaxed CSP for development, strict for production
-  const isDev = process.env.NODE_ENV === 'development';
+  // Removed nonce generation – not needed for strict CSP
   
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com;
+    script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://pagead2.googlesyndication.com https://www.google-analytics.com;
     font-src 'self' data: https://fonts.gstatic.com;
@@ -29,7 +26,6 @@ export function middleware(request: NextRequest) {
     .trim();
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue);
 
   const response = NextResponse.next({
