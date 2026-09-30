@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getCategoryBySlug } from '@/config/categories';
+import { getCategoryBySlug, categories } from '@/config/categories';
 import { getSimulatorsByCategory } from '@/config/simulators';
 import { Card } from '@/components/ui/Card';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
@@ -10,6 +10,12 @@ import { FAQSection } from '@/components/simulator/FAQSection';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+
+export async function generateStaticParams() {
+  return categories.map((category) => ({
+    slug: category.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;

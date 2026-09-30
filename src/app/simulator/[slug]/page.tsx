@@ -1,9 +1,15 @@
 import { getCategoryBySlug } from '@/config/categories';
-import { getSimulatorBySlug } from '@/config/simulators';
+import { getSimulatorBySlug, simulators } from '@/config/simulators';
 import { notFound } from 'next/navigation';
 import { SimulatorPage } from '@/components/simulator/SimulatorPage';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+
+export async function generateStaticParams() {
+  return simulators.map((simulator) => ({
+    slug: simulator.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;

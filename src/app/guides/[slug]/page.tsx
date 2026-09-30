@@ -1,4 +1,4 @@
-import { getGuideBySlug } from '@/config/guides';
+import { getGuideBySlug, guides } from '@/config/guides';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { RelatedSimulators } from '@/components/simulator/RelatedSimulators';
@@ -8,6 +8,12 @@ import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
 import { AdSlot } from '@/components/layout/AdSlot';
 import { autoLinkText } from '@/lib/seo-linker';
+
+export async function generateStaticParams() {
+  return guides.map((guide) => ({
+    slug: guide.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
