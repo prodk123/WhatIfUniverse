@@ -39,16 +39,25 @@ export function SimulatorPage({ simulator, category, permutation, isEmbed = fals
   // Auto-switch to simulator's default currency when the simulator changes
   useEffect(() => {
     setLocked(simulator.isCurrencyLocked || false);
-    if (simulator.defaultCurrencyCode && lastSimulatorSlugRef.current !== simulator.slug) {
-      const simBaseCurrency = currencies.find(c => c.code === simulator.defaultCurrencyCode);
-      if (simBaseCurrency && simBaseCurrency.code !== currency.code) {
-        setCurrency(simBaseCurrency);
+    if (lastSimulatorSlugRef.current !== simulator.slug) {
+      if (simulator.defaultCurrencyCode) {
+        const simBaseCurrency = currencies.find(c => c.code === simulator.defaultCurrencyCode);
+        if (simBaseCurrency && simBaseCurrency.code !== currency.code) {
+          setCurrency(simBaseCurrency);
+        }
+      } else if (isEmbed) {
+        // Embeds without a specific currency should reset to INR base
+        // to avoid inheriting a stale currency from localStorage
+        const baseCurrency = currencies.find(c => c.code === 'INR');
+        if (baseCurrency && baseCurrency.code !== currency.code) {
+          setCurrency(baseCurrency);
+        }
       }
       lastSimulatorSlugRef.current = simulator.slug;
     }
     
     return () => setLocked(false);
-  }, [simulator.defaultCurrencyCode, simulator.slug, simulator.isCurrencyLocked, currency.code, setCurrency, setLocked]);
+  }, [simulator.defaultCurrencyCode, simulator.slug, simulator.isCurrencyLocked, isEmbed, currency.code, setCurrency, setLocked]);
 
   // Initialize defaults
   useEffect(() => {
