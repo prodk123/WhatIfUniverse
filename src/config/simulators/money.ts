@@ -59,6 +59,11 @@ export const moneySimulators: SimulatorConfig[] = [
     defaultRateSlider(12),
     defaultYearsSlider(15)
   ]),
+  createMoneySim('invest-100-daily', 'What If I Invest $100 Daily?', 'Accelerate your wealth with a massive $100 daily investment.', 365, [
+    { name: 'dailyAmount', label: 'Daily Investment Amount', type: 'number', defaultValue: 100, min: 10, max: 5000, step: 10, prefix: '$', validation: [] },
+    defaultRateSlider(12),
+    defaultYearsSlider(15)
+  ]),
   createMoneySim('save-20-percent', 'What If I Save 20% of My Income?', 'The standard 50/30/20 rule in action.', 12, [
     { name: 'income', label: 'Monthly Income', type: 'number', defaultValue: 50000, min: 5000, max: 1000000, step: 5000, prefix: '$', validation: [] },
     { name: 'savingsRate', label: 'Savings Rate', type: 'slider', defaultValue: 20, min: 5, max: 80, step: 5, suffixStr: '%', validation: [] },

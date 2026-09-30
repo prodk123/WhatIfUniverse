@@ -51,6 +51,7 @@ function HeaderContent() {
           <Link href="/category/health" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Health</Link>
           <Link href="/category/education" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Education</Link>
           <Link href="/category/business" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Business</Link>
+          <Link href="/category/lifestyle" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Lifestyle</Link>
           <Link href="/guides" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Guides</Link>
         </nav>
 
@@ -68,6 +69,7 @@ function HeaderContent() {
           <Link href="/category/health" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Health</Link>
           <Link href="/category/education" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Education</Link>
           <Link href="/category/business" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Business</Link>
+          <Link href="/category/lifestyle" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Lifestyle</Link>
           <Link href="/guides" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Guides</Link>
         </div>
       )}

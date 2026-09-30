@@ -48,6 +48,15 @@ export const educationSimulators: SimulatorConfig[] = [
     defaultYears
   ], 'USD', 'Implemented currency conversion factor between home country (India) and target country (USA). All calculations are based on 1 USD = 83 RS (2026).'),
   
+  createEducationSim('masters-in-dubai', 'What If I Do My Master\'s in Dubai?', 'ROI of a Master\'s program in Dubai with zero tax.', [
+    { name: 'expectedSalaryWithoutDegree', label: 'Current Salary in Home Country', type: 'number', defaultValue: 10000, min: 0, max: 50000, step: 1000, prefix: '$', validation: [] },
+    { name: 'tuitionCost', label: 'Total Dubai Degree Cost (Tuition + Living)', type: 'number', defaultValue: 60000, min: 20000, max: 200000, step: 5000, prefix: '$', validation: [] },
+    { name: 'studyYears', label: 'Duration of Dubai Degree', type: 'slider', defaultValue: 1.5, min: 1, max: 5, step: 0.5, suffixStr: ' years', validation: [] },
+    { name: 'postGradSalary', label: 'Expected Dubai Salary (per year)', type: 'number', defaultValue: 90000, min: 40000, max: 300000, step: 5000, prefix: '$', validation: [] },
+    defaultLoanRate,
+    defaultYears
+  ], 'AED', 'Implemented currency conversion factor. All calculations are based on AED where 1 AED = 22.6 RS (2026).'),
+
   createEducationSim('pursue-masters-degree', 'What If I Pursue a Master\'s Degree?', 'ROI of a standard 2-year Master\'s program.', [
     defaultExpectedSalary,
     { name: 'tuitionCost', label: 'Total Degree Cost', type: 'number', defaultValue: 1500000, min: 100000, max: 10000000, step: 100000, prefix: '$', validation: [] },
