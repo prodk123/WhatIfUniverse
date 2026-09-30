@@ -1,10 +1,26 @@
 import { getCategoryBySlug } from '@/config/categories';
-import { getSimulatorBySlug } from '@/config/simulators';
-import { getPermutation } from '@/config/permutations';
+import { getSimulatorBySlug, simulators } from '@/config/simulators';
+import { getPermutation, simulatorPermutations } from '@/config/permutations';
 import { notFound } from 'next/navigation';
 import { SimulatorPage } from '@/components/simulator/SimulatorPage';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+
+export async function generateStaticParams() {
+  const params: { slug: string; permutation: string }[] = [];
+  for (const simulator of simulators) {
+    const perms = simulatorPermutations[simulator.slug];
+    if (perms) {
+      for (const perm of perms) {
+        params.push({
+          slug: simulator.slug,
+          permutation: perm.permutationSlug,
+        });
+      }
+    }
+  }
+  return params;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, permutation: string }> }): Promise<Metadata> {
   const resolvedParams = await params;

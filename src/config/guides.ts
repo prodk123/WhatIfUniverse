@@ -13,7 +13,7 @@ export const guides: Guide[] = [
     title: 'How to Calculate the Exact ROI of a Master\'s Degree',
     description: 'A comprehensive guide to understanding opportunity cost, tuition ROI, and break-even timelines for higher education.',
     date: '2026-06-23',
-    relatedSimulators: ['masters-usa', 'masters-dubai'],
+    relatedSimulators: ['masters-in-usa', 'masters-in-dubai'],
     content: `
 # Is a Master's Degree Worth It? The Ultimate Financial Breakdown
 

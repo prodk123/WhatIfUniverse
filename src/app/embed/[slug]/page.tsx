@@ -1,10 +1,16 @@
 import React from 'react';
-import { getSimulatorBySlug } from '@/config/simulators';
+import { getSimulatorBySlug, simulators } from '@/config/simulators';
 import { getCategoryBySlug } from '@/config/categories';
 import { SimulatorPage } from '@/components/simulator/SimulatorPage';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+
+export async function generateStaticParams() {
+  return simulators.map((simulator) => ({
+    slug: simulator.slug,
+  }));
+}
 
 // Embed pages are iframed copies of a simulator — don't index them
 // separately; point canonical back to the main simulator page.
