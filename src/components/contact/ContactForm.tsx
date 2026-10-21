@@ -17,7 +17,27 @@ export function ContactForm() {
     const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || 'b1678c0d-6b92-40fc-91ef-1b405ca78438';
 
     try {
-      const response = await fetch('https://api.web3forms.com/submit', {
+      // First try our same-origin API route (immune to browser CORS / adblocker / CSP issues)
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          category: topic,
+          message: message,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+        return;
+      }
+      
+      // If API route returned an error, fallback to direct submission
+      const directResponse = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,14 +53,39 @@ export function ContactForm() {
         }),
       });
 
-      const result = await response.json();
-      if (result.success) {
+      const directResult = await directResponse.json();
+      if (directResult.success) {
         setSubmitted(true);
       } else {
-        setErrorMessage(result.message || 'Unable to submit feedback. Please try again.');
+        setErrorMessage(directResult.message || 'Unable to submit feedback. Please try again.');
       }
     } catch {
-      setErrorMessage('A network error occurred. Please try again.');
+      // If network fails (e.g. adblocker blocking both), try direct POST as last resort
+      try {
+        const directResponse = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            subject: `[What If Universe] New Feedback: ${topic}`,
+            from_name: 'What If Universe Anonymous Feedback',
+            category: topic,
+            message: message,
+            submitted_at: new Date().toISOString(),
+          }),
+        });
+        const directResult = await directResponse.json();
+        if (directResult.success) {
+          setSubmitted(true);
+          return;
+        }
+      } catch {
+        // Fallback error
+      }
+      setErrorMessage('A network error occurred. Please try again or open an issue on GitHub.');
     } finally {
       setLoading(false);
     }

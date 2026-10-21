@@ -10,11 +10,11 @@ export function middleware(request: NextRequest) {
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://pagead2.googlesyndication.com https://www.google-analytics.com;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com https://stats.g.doubleclick.net;
+    connect-src 'self' https://pagead2.googlesyndication.com https://www.google-analytics.com https://stats.g.doubleclick.net https://api.web3forms.com;
     frame-src 'self' https://googleads.g.doubleclick.net;
     object-src 'none';
     base-uri 'self';
-    form-action 'self';
+    form-action 'self' https://api.web3forms.com;
     frame-ancestors 'self';
     block-all-mixed-content;
     upgrade-insecure-requests;
