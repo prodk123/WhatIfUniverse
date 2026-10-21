@@ -16,7 +16,7 @@ function FooterContent() {
   return (
     <footer className="bg-gray-50 dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 py-12 mt-12 transition-colors duration-300">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <Link href="/" className="font-extrabold text-lg tracking-tight text-gray-900 dark:text-white">
               What If <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Universe</span>
@@ -35,6 +35,16 @@ function FooterContent() {
               <li><Link href="/category/education" className="hover:text-primary">Education</Link></li>
               <li><Link href="/category/business" className="hover:text-primary">Business</Link></li>
               <li><Link href="/category/lifestyle" className="hover:text-primary">Lifestyle</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Company</h3>
+            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
+              <li><Link href="/guides" className="hover:text-primary">Guides</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

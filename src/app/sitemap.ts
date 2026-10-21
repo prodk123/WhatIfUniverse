@@ -46,6 +46,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   });
 
+  // Add static pages
+  routes.push(
+    {
+      url: `${siteConfig.url}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${siteConfig.url}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteConfig.url}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    }
+  );
+
   // Add Guides index
   routes.push({
     url: `${siteConfig.url}/guides`,
