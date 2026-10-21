@@ -99,8 +99,10 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">10. Contact</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              If you have any questions about these Terms of Service, please contact us at{' '}
-              <a href="mailto:legal@what-if-universe.com" className="text-primary hover:underline">legal@what-if-universe.com</a>.
+              If you have any questions or feedback regarding these Terms of Service, please reach out via our{' '}
+              <a href="/contact" className="text-primary hover:underline">Feedback page</a>{' '}
+              or open an issue on our public{' '}
+              <a href="https://github.com/prodk123/WhatIfUniverse" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GitHub repository</a>.
             </p>
           </section>
         </div>

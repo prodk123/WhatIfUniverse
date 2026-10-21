@@ -94,11 +94,13 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Contact</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Feedback & Contributions</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              Have a suggestion for a new calculator? Found a bug? Want to collaborate?{' '}
-              Reach out to us at{' '}
-              <a href="mailto:hello@what-if-universe.com" className="text-primary hover:underline">hello@what-if-universe.com</a>.
+              Have a suggestion for a new calculator, found a mathematical edge case, or want to contribute?{' '}
+              Leave an anonymous suggestion via our{' '}
+              <Link href="/contact" className="text-primary hover:underline font-semibold">Feedback page</Link>
+              {' '}or open an issue on our public{' '}
+              <a href="https://github.com/prodk123/WhatIfUniverse" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">GitHub repository</a>.
             </p>
           </section>
         </div>

@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">8. Your Rights</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              Depending on your location, you may have certain rights regarding your personal data, including the right to access, correct, delete, or restrict the processing of your personal data. To exercise any of these rights, please contact us at the email address below.
+              Because What If Universe operates with a zero-data collection policy—we do not collect, store, or require your name, email address, or calculator inputs—we hold no identifiable personal records on our visitors. All calculations execute solely in your local browser.
             </p>
           </section>
 
@@ -118,8 +118,10 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">10. Contact Us</h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              If you have any questions about this Privacy Policy, please contact us at{' '}
-              <a href="mailto:privacy@what-if-universe.com" className="text-primary hover:underline">privacy@what-if-universe.com</a>.
+              If you have any questions or feedback about this Privacy Policy, please reach out via our{' '}
+              <a href="/contact" className="text-primary hover:underline">Feedback page</a>{' '}
+              or submit an issue on our public{' '}
+              <a href="https://github.com/prodk123/WhatIfUniverse" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">GitHub repository</a>.
             </p>
           </section>
         </div>
