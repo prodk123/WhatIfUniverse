@@ -3,7 +3,7 @@
 export const siteConfig = {
   name: 'What If Universe',
   tagline: 'Explore Alternate Futures Before Making Decisions',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://whatifuniverse.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://what-if-universe.com',
   description:
     'Explore alternate outcomes for money, career, health, education, and life decisions with free interactive simulators. No signup required.',
   adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || '',

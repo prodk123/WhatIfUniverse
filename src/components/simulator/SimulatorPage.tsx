@@ -20,6 +20,7 @@ import { EngineResult } from '@/types/engine';
 import { AdSlot } from '@/components/layout/AdSlot';
 import { useCurrency, currencies } from '@/context/CurrencyContext';
 import { autoLinkText } from '@/lib/seo-linker';
+import { getSimulatorGuideContent } from '@/lib/simulator-content';
 
 import { getPermutationsForSimulator } from '@/config/permutations';
 
@@ -35,6 +36,7 @@ export function SimulatorPage({ simulator, category, permutation, isEmbed = fals
   
   // Get all permutations for this simulator to show as internal links
   const availableScenarios = getPermutationsForSimulator(simulator.slug).filter(p => p.permutationSlug !== permutation?.permutationSlug);
+  const guideContent = !isEmbed ? getSimulatorGuideContent(simulator, category, permutation) : '';
 
   // Auto-switch to simulator's default currency when the simulator changes
   useEffect(() => {
@@ -237,12 +239,12 @@ export function SimulatorPage({ simulator, category, permutation, isEmbed = fals
         </div>
       </div>
 
-      {!isEmbed && permutation?.seoContent && (
-        <div className="prose dark:prose-invert max-w-4xl mx-auto my-12 bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-slate-800">
+      {!isEmbed && guideContent && (
+        <article className="prose prose-slate dark:prose-invert max-w-4xl mx-auto my-12 bg-white dark:bg-slate-900 p-8 md:p-12 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 dark:border-slate-800">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {autoLinkText(permutation.seoContent)}
+            {autoLinkText(guideContent)}
           </ReactMarkdown>
-        </div>
+        </article>
       )}
 
       {!isEmbed && (

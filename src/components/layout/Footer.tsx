@@ -42,6 +42,7 @@ function FooterContent() {
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
               <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-primary">Contact Us</Link></li>
               <li><Link href="/guides" className="hover:text-primary">Guides</Link></li>
               <li><Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-primary">Terms of Service</Link></li>

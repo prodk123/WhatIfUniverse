@@ -71,6 +71,7 @@ function HeaderContent() {
           <Link href="/category/business" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Business</Link>
           <Link href="/category/lifestyle" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Lifestyle</Link>
           <Link href="/guides" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Guides</Link>
+          <Link href="/contact" onClick={closeMenu} className="block text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-semibold transition-colors">Contact Us</Link>
         </div>
       )}
     </header>
