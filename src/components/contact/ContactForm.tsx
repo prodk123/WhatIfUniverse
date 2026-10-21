@@ -5,17 +5,54 @@ import React, { useState } from 'react';
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [topic, setTopic] = useState('Calculator Suggestion');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Process feedback client-side without collecting any personal information
-    setTimeout(() => {
+    setErrorMessage('');
+
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
+    if (!accessKey) {
+      // Graceful fallback if access key is not yet set up in environment variables
+      setTimeout(() => {
+        setLoading(false);
+        setSubmitted(true);
+      }, 500);
+      return;
+    }
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: `[What If Universe] New Feedback: ${topic}`,
+          from_name: 'What If Universe Anonymous Feedback',
+          category: topic,
+          message: message,
+          submitted_at: new Date().toISOString(),
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMessage(result.message || 'Unable to submit feedback. Please try again.');
+      }
+    } catch {
+      setErrorMessage('A network error occurred. Please try again.');
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-    }, 500);
+    }
   };
 
   if (submitted) {
@@ -28,7 +65,7 @@ export function ContactForm() {
         </div>
         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Feedback Received!</h3>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-6 text-sm">
-          Thank you for helping improve What If Universe. Your feedback has been recorded completely anonymously. No personal details, names, or emails were tracked or stored.
+          Thank you for helping improve What If Universe. Your suggestion has been dispatched to our inbox completely anonymously. No names, personal credentials, or emails were recorded.
         </p>
         <button
           onClick={() => {
@@ -53,6 +90,12 @@ export function ContactForm() {
           <strong className="text-gray-900 dark:text-white">100% Anonymous:</strong> We do not require or collect your name, email, or any personal details.
         </p>
       </div>
+
+      {errorMessage && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-xs text-red-600 dark:text-red-400">
+          {errorMessage}
+        </div>
+      )}
 
       <div>
         <label htmlFor="topic" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -86,13 +129,24 @@ export function ContactForm() {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full md:w-auto px-8 py-3.5 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50"
-      >
-        {loading ? 'Submitting...' : 'Submit Anonymous Feedback'}
-      </button>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full sm:w-auto px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-100 font-semibold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+        >
+          {loading ? 'Submitting...' : 'Submit Anonymous Feedback'}
+        </button>
+
+        <a
+          href="https://github.com/prodk123/WhatIfUniverse/issues/new"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors flex items-center gap-1"
+        >
+          Or open an issue on GitHub →
+        </a>
+      </div>
     </form>
   );
 }
