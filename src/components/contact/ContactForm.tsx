@@ -14,16 +14,7 @@ export function ContactForm() {
     setLoading(true);
     setErrorMessage('');
 
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-
-    if (!accessKey) {
-      // Graceful fallback if access key is not yet set up in environment variables
-      setTimeout(() => {
-        setLoading(false);
-        setSubmitted(true);
-      }, 500);
-      return;
-    }
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || 'b1678c0d-6b92-40fc-91ef-1b405ca78438';
 
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
